@@ -1,8 +1,7 @@
 import datetime
 import os
 import smtplib
-
-from forms import WeatherForm, SmsForm, EmailForm
+from forms import WeatherForm, EmailForm
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
 import requests
@@ -13,35 +12,22 @@ app.config['SECRET_KEY'] = os.getenv('FLASK_KEY', '12345')
 
 URL_WEATHER = 'https://api.openweathermap.org/data/2.5/forecast'
 API_KEY_WEATHER = 'a0bdd1c7a07b99650e30e7b60768fceb'
-my_mail = 'pythonkurskurs@gmail.com'
-my_password = 'svvbtqswtoxdbchw'
+MY_MAIL = os.getenv('MY_MAIL', 'pythonkurskurs@gmail.com')
+MY_MAIL_PASSWORD = os.getenv('MY_MAIL_PASSWORD', 'svvbtqswtoxdbchw')
 
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
     weather_form = WeatherForm()
-
     if weather_form.validate_on_submit():
-        sms_form = SmsForm()
         location = request.form['location']
-
         return redirect(url_for('weather_page', location=location))
-        # return render_template('weather.html', sms_form=sms_form, weather_data_today=weather_today,
-        #                        weather_data_rest=weather_rest_days, location=location.title(),
-        #                        today=today)
-
     return render_template('index.html', form=weather_form)
-
-
-
 
 
 @app.route('/weather', methods=['POST', 'GET'])
 def weather_page():
-
     email_form = EmailForm()
-
-
     location = request.args.get('location')
     body = {
         'q': location.strip(),
@@ -82,13 +68,10 @@ def weather_page():
             email = request.form['email']
             with smtplib.SMTP('smtp.gmail.com', port=587) as connection:
                 connection.starttls()
-                connection.login(my_mail, my_password)
-                connection.sendmail(from_addr=my_mail, to_addrs=email,
-                                    msg=f'Subject:Weather {today} \n\n Is it going to rain: {is_rain}')
+                connection.login(MY_MAIL, MY_MAIL_PASSWORD)
+                connection.sendmail(from_addr=MY_MAIL, to_addrs=email,
+                                    msg=f'Subject:Weather for {today} \n\nIs it going to rain: {is_rain}')
                 flash('Message has been sent :3')
-
-
-
 
         return render_template('weather.html', email_form=email_form, location=location, today=today,
                                weather_data_today=weather_today, weather_data_rest=weather_rest_days)
