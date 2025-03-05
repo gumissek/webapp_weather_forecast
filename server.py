@@ -1,4 +1,4 @@
-#author https://github.com/gumissek/webapp_weather_forecast
+# author https://github.com/gumissek/webapp_weather_forecast
 import datetime
 import os
 import smtplib
@@ -12,7 +12,7 @@ bootstrap = Bootstrap5(app)
 app.config['SECRET_KEY'] = os.getenv('FLASK_KEY', '12345')
 
 URL_WEATHER = 'https://api.openweathermap.org/data/2.5/forecast'
-API_KEY_WEATHER = os.getenv('API_KEY_WEATHER','a0bdd1c7a07b99650e30e7b60768fceb')
+API_KEY_WEATHER = os.getenv('API_KEY_WEATHER', 'a0bdd1c7a07b99650e30e7b60768fceb')
 MY_MAIL = os.getenv('MY_MAIL', 'pythonkurskurs@gmail.com')
 MY_MAIL_PASSWORD = os.getenv('MY_MAIL_PASSWORD', 'svvbtqswtoxdbchw')
 
