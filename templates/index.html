@@ -1,0 +1,43 @@
+{%extends 'base.html'%}
+{%block title%} Index Webapp weather {%endblock%}
+{% from 'bootstrap5/form.html'  import render_form%}
+
+{%block content%}
+<div class="container col-6 my-4">
+    <h1>start</h1>
+    {% with messages = get_flashed_messages()%}
+    {%if messages%}
+    {%for message in messages%}
+    <p style="color:red">{{message}}</p>
+    {%endfor%}
+    {% endif %}
+    {% endwith %}
+
+    {{render_form(form,novalidate=True)}}
+    <hr>
+    {%if location%}
+    <h1>Weather forecast for: {{location}}</h1>
+    {%endif%}
+
+    {%if weather_data_today%}
+    <h2>Weather forecast for today - {{today}}</h2>
+    {%for element in weather_data_today%}
+    <p>Time: {{element['date'].split(' ')[1]}} Temp: {{element['temp']}} C Temp min: {{element['temp_min']}} C Temp
+        max:{{element['temp_max']}} C Main: {{element['weather']}} Description:{{element['description']}}</p>
+    {%endfor%}
+    {%endif%}
+
+    {%if weather_data_rest%}
+    <h2>Weather forecast </h2>
+    {%for element in weather_data_rest%}
+    {%if weather_data_rest.index(element) % 8 ==0%}
+    <h3>Date: {{element['date'].split(' ')[0]}}</h3>
+    {%endif%}
+    <p>Time: {{element['date'].split(' ')[1]}} Temp: {{element['temp']}} C Temp min: {{element['temp_min']}} C Temp
+        max:{{element['temp_max']}} C Main: {{element['weather']}} Description:{{element['description']}}</p>
+
+    {%endfor%}
+    {%endif%}
+
+</div>
+{%endblock%}
