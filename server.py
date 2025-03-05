@@ -1,3 +1,4 @@
+#author https://github.com/gumissek/webapp_weather_forecast
 import datetime
 import os
 import smtplib
@@ -11,7 +12,7 @@ bootstrap = Bootstrap5(app)
 app.config['SECRET_KEY'] = os.getenv('FLASK_KEY', '12345')
 
 URL_WEATHER = 'https://api.openweathermap.org/data/2.5/forecast'
-API_KEY_WEATHER = 'a0bdd1c7a07b99650e30e7b60768fceb'
+API_KEY_WEATHER = os.getenv('API_KEY_WEATHER','a0bdd1c7a07b99650e30e7b60768fceb')
 MY_MAIL = os.getenv('MY_MAIL', 'pythonkurskurs@gmail.com')
 MY_MAIL_PASSWORD = os.getenv('MY_MAIL_PASSWORD', 'svvbtqswtoxdbchw')
 
@@ -20,7 +21,7 @@ MY_MAIL_PASSWORD = os.getenv('MY_MAIL_PASSWORD', 'svvbtqswtoxdbchw')
 def home():
     weather_form = WeatherForm()
     if weather_form.validate_on_submit():
-        location = request.form['location']
+        location = request.form['location'].title()
         return redirect(url_for('weather_page', location=location))
     return render_template('index.html', form=weather_form)
 
@@ -39,10 +40,10 @@ def weather_page():
         data = response.json()['list']
 
     except requests.exceptions.HTTPError:
-        flash(f'There is no city called: {location}\nTry again!')
+        flash(f'There is no location called: {location}\nTry again!')
         return redirect(url_for('home'))
     except KeyError:
-        flash(f'There is no city called: {location}\nTry again!')
+        flash(f'There is no location called: {location}\nTry again!')
         return redirect(url_for('home'))
     else:
         today = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -71,11 +72,11 @@ def weather_page():
                 connection.login(MY_MAIL, MY_MAIL_PASSWORD)
                 connection.sendmail(from_addr=MY_MAIL, to_addrs=email,
                                     msg=f'Subject:Weather for {today} \n\nIs it going to rain: {is_rain}')
-                flash('Message has been sent :3')
+                flash('Email has been sent :3')
 
         return render_template('weather.html', email_form=email_form, location=location, today=today,
                                weather_data_today=weather_today, weather_data_rest=weather_rest_days)
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=False, port=5001)

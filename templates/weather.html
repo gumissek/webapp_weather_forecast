@@ -1,45 +1,47 @@
 {%extends 'base.html'%}
-{%block title%} Index Webapp weather {%endblock%}
+{%block title%} Weather: {{location}} {%endblock%}
 {% from 'bootstrap5/form.html'  import render_form%}
 
 {%block content%}
-<div class="container col-6 my-4">
+<div class="container col-4 my-5">
     {%if location%}
-    <h1>Weather forecast for: {{location}}</h1>
-    {% with messages = get_flashed_messages()%}
-    {%if messages%}
-    {%for message in messages%}
-    <p style="color:red">{{message}}</p>
-    {%endfor%}
-    {% endif %}
-    {% endwith %}
+        <h1>Weather forecast for: {{location}}</h1>
+        {% with messages = get_flashed_messages()%}
+            {%if messages%}
+                {%for message in messages%}
+                    <p style="color:red">{{message}}</p>
+                {%endfor%}
+            {% endif %}
+        {% endwith %}
     {%endif%}
 
     {%if email_form%}
-    <h1>Let me know if it is going to rain.</h1>
-    {{render_form(email_form,novalidate=True)}}
+        <h3 class="my-4">Let me know if it is going to rain.</h3>
+        {{render_form(email_form,novalidate=True)}}
     {%endif%}
     <br>
-    <a href={{url_for('home')}} class="btn btn-primary">Check another location.</a>
+    <a href={{url_for('home')}} class="btn btn-primary">Check another location</a>
     <hr>
     {%if weather_data_today%}
-    <h2>Weather forecast for today - {{today}}</h2>
-    {%for element in weather_data_today%}
-    <p>Time: {{element['date'].split(' ')[1]}} Temp: {{element['temp']}} C Temp min: {{element['temp_min']}} C Temp
-        max:{{element['temp_max']}} C Main: {{element['weather']}} Description:{{element['description']}}</p>
-    {%endfor%}
+        <h4 class="text-center">Weather forecast for today - {{today}}</h4>
+            {%for element in weather_data_today%}
+                <p><b>Time: {{element['date'].split(' ')[1].split(':')[0]}}:{{element['date'].split(' ')[1].split(':')[1]}} </b><br>Temp: {{element['temp']}}C <br>Temp min: {{element['temp_min']}}C <br>Temp
+                max: {{element['temp_max']}}C <br>Weather: {{element['weather']}} - {{element['description']}}</p>
+        {%endfor%}
     {%endif%}
 
     {%if weather_data_rest%}
-    <h2>Weather forecast </h2>
-    {%for element in weather_data_rest%}
-    {%if weather_data_rest.index(element) % 8 ==0%}
-    <h3>Date: {{element['date'].split(' ')[0]}}</h3>
-    {%endif%}
-    <p>Time: {{element['date'].split(' ')[1]}} Temp: {{element['temp']}} C Temp min: {{element['temp_min']}} C Temp
-        max:{{element['temp_max']}} C Main: {{element['weather']}} Description:{{element['description']}}</p>
+        <h4 class="text-center">Weather forecast for next days:</h4>
+        {%for element in weather_data_rest%}
+            {%if weather_data_rest.index(element) % 8 ==0%}
+                <hr>
+                <h5 class="my-3"><b>Date: {{element['date'].split(' ')[0]}}</b></h5>
+                <hr>
+            {%endif%}
+            <p><b>Time: {{element['date'].split(' ')[1].split(':')[0]}}:{{element['date'].split(' ')[1].split(':')[1]}} </b><br>Temp: {{element['temp']}}C <br>Temp min: {{element['temp_min']}}C <br>Temp
+                max: {{element['temp_max']}}C <br>Weather: {{element['weather']}} - {{element['description']}}</p>
 
-    {%endfor%}
+        {%endfor%}
     {%endif%}
 </div>
 {%endblock%}
