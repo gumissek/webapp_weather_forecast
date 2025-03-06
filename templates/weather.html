@@ -24,6 +24,7 @@
     <hr>
     {%if weather_data_today%}
         <h4 class="text-center">Weather forecast for today - {{today}}</h4>
+            <hr>
             {%for element in weather_data_today%}
                 <p><b>Time: {{element['date'].split(' ')[1].split(':')[0]}}:{{element['date'].split(' ')[1].split(':')[1]}} </b><br>Temp: {{element['temp']}}C <br>Temp min: {{element['temp_min']}}C <br>Temp
                 max: {{element['temp_max']}}C <br>Weather: {{element['weather']}} - {{element['description']}}</p>
@@ -31,6 +32,7 @@
     {%endif%}
 
     {%if weather_data_rest%}
+    <hr>
         <h4 class="text-center">Weather forecast for next days:</h4>
         {%for element in weather_data_rest%}
             {%if weather_data_rest.index(element) % 8 ==0%}
